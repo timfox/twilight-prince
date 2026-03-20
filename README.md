@@ -52,6 +52,7 @@ More information about the project can be found here: <https://zsrtp.link>
 - [Dependencies](#dependencies)
 - [Building](#building)
 - [Playing on a PC](#playing-on-a-pc)
+- [Native PC port (optional)](#native-pc-port-optional)
 - [Diffing](#diffing)
 - [Contributing](#contributing)
 - [FAQ](https://zsrtp.link/about)
@@ -127,6 +128,10 @@ Research notes on the **GX** graphics model and how it relates to a hypothetical
 This repository **does not ship** a Windows/Linux/macOS game executable from this tree—it targets GameCube/Wii CPUs for **matching** builds. **Community native ports** (or similar recomp projects) may exist separately; they are **not** produced by `configure.py` + `ninja` here.
 
 For **most people**, playing on a PC at **high resolution** and **widescreen** means using a **native PC emulator** (typically [Dolphin](https://dolphin-emu.org/)) with graphics settings and optional codes. Details and nuance (including emulation vs port projects): [docs/pc-widescreen-and-resolution.md](docs/pc-widescreen-and-resolution.md).
+
+### Native PC port (optional)
+
+A separate **work-in-progress** community port (CMake, Aurora / GX bridge) lives at **[mbayonal/tp-port](https://github.com/mbayonal/tp-port)** and is **not** built by `ninja` in this repository. To clone it and vendor **[encounter/aurora](https://github.com/encounter/aurora)** next to its `extern/aurora` path, run `bash scripts/setup-native-port.sh` (or `make native-port-setup`). Full links, expectations, and how this differs from the matching decomp: [docs/native-port-resources.md](docs/native-port-resources.md).
 
 ## Diffing
 

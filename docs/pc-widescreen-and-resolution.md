@@ -7,6 +7,7 @@ Separately, **community native ports** (recomp / custom renderers / host toolcha
 This page still covers two common paths:
 
 - **Emulation** (Dolphin): very common, no separate port project required.
+- **Native desktop build** (experimental community port + Aurora): see [native-port-resources.md](native-port-resources.md) and `scripts/setup-native-port.sh`.
 - **Widescreen-related code** in *this* source tree (e.g. `WIDESCREEN_SUPPORT`): how it lines up with **Wii vs GameCube** retail-style builds.
 
 ## 1. What “native on PC” can mean here
