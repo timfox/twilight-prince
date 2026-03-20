@@ -51,7 +51,7 @@ More information about the project can be found here: <https://zsrtp.link>
 - [Progress](https://zsrtp.link/progress)
 - [Dependencies](#dependencies)
 - [Building](#building)
-- [Playing on a PC (emulation)](#playing-on-a-pc-emulation)
+- [Playing on a PC](#playing-on-a-pc)
 - [Diffing](#diffing)
 - [Contributing](#contributing)
 - [FAQ](https://zsrtp.link/about)
@@ -122,9 +122,11 @@ Research notes on the **GX** graphics model and how it relates to a hypothetical
 
 - Optional: verify tools and `orig/` layout with `bash scripts/check-env.sh` or `make check-env`, then `make configure` / `make build` (or `make rebuild` to run both). Pass extra configure flags with `make configure CONFIGURE_ARGS="--version GZ2P01"`.
 
-## Playing on a PC (emulation)
+## Playing on a PC
 
-This project **does not** output a native Windows/Linux game binary; it targets GameCube/Wii CPUs. To play on a PC at **high resolution** and **widescreen**, use a **native PC emulator** (typically [Dolphin](https://dolphin-emu.org/)) with graphics settings and optional widescreen codes—see [docs/pc-widescreen-and-resolution.md](docs/pc-widescreen-and-resolution.md).
+This repository **does not ship** a Windows/Linux/macOS game executable from this tree—it targets GameCube/Wii CPUs for **matching** builds. **Community native ports** (or similar recomp projects) may exist separately; they are **not** produced by `configure.py` + `ninja` here.
+
+For **most people**, playing on a PC at **high resolution** and **widescreen** means using a **native PC emulator** (typically [Dolphin](https://dolphin-emu.org/)) with graphics settings and optional codes. Details and nuance (including emulation vs port projects): [docs/pc-widescreen-and-resolution.md](docs/pc-widescreen-and-resolution.md).
 
 ## Diffing
 

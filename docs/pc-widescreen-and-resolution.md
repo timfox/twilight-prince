@@ -1,16 +1,22 @@
 # Playing on PC: widescreen and full resolution
 
-This repository **does not produce a native Windows/Linux game executable** (x86/arm64). It builds **PowerPC** binaries for GameCube/Wii that match retail. Running those on a PC means **emulation** or a **separate port project**—not something this decomp turns into with a few build flags.
+**This repository (`zeldaret/tp`)** is a **matching decompilation**: it builds **PowerPC** GameCube/Wii binaries (DOL/REL) intended to match retail. It **does not ship** a Windows/Linux/macOS game executable from this tree—see the [README](../README.md). That is a policy and scope choice for this project, not a claim about what is technically possible elsewhere.
 
-That said, you can absolutely play on a **PC at high resolution and widescreen** using a **native PC emulator** and the right settings.
+Separately, **community native ports** (recomp / custom renderers / host toolchains) are a **known pattern** after classic decomps (e.g. Super Mario 64, Ocarina of Time). People work on **forks and sibling projects** that retarget the game to PC-class CPUs and modern APIs. Those efforts are **not** produced by `configure.py` + `ninja` here; they are their own repositories, builds, and release channels. If you are using one, follow **that** project’s instructions for assets, widescreen, and resolution.
+
+This page still covers two common paths:
+
+- **Emulation** (Dolphin): very common, no separate port project required.
+- **Widescreen-related code** in *this* source tree (e.g. `WIDESCREEN_SUPPORT`): how it lines up with **Wii vs GameCube** retail-style builds.
 
 ## 1. What “native on PC” can mean here
 
 | Approach | Widescreen / resolution | Notes |
 |----------|-------------------------|--------|
-| **[Dolphin Emulator](https://dolphin-emu.org/)** on Windows/Linux/macOS | Yes: internal resolution, aspect ratio, hacks | **Practical** path; runs a native PC app (Dolphin); game is JIT/emulated. |
-| **This repo’s build output** (DOL/REL) on real GC/Wii hardware | Hardware limits | Not “PC”; no arbitrary desktop resolution. |
-| **Hypothetical Vulkan/OpenGL port** | Full control | **Not** this project’s goal; would be a new engine (see [vulkan-transition-audit.md](vulkan-transition-audit.md)). |
+| **[Dolphin Emulator](https://dolphin-emu.org/)** on Windows/Linux/macOS | Yes: internal resolution, aspect ratio, hacks | **Widely used**; Dolphin is a native PC app; the game runs **inside** emulation. |
+| **Community native port** (recomp / custom backend) | Depends on project | **Not** shipped from this repo; may exist or evolve as **separate** community work. |
+| **This repo’s build output** (DOL/REL) on real GC/Wii hardware | Hardware limits | PowerPC binaries; not a desktop executable. |
+| **Research: modern API** | Vulkan, etc. | See [vulkan-transition-audit.md](vulkan-transition-audit.md)—host-side reimplementation is a large undertaking. |
 
 ## 2. Widescreen in *this* codebase vs retail builds
 
@@ -51,12 +57,13 @@ Always use codes from reputable sources and verify they match your **exact** gam
 
 ## 5. If you wanted widescreen *inside* a GameCube-targeted build
 
-Enabling **`WIDESCREEN_SUPPORT`** for **GameCube** would be an **experimental, non-matching** change (it is not how retail GCN builds were compiled). That would require a deliberate fork, extensive testing, and is **out of scope** for upstream matching goals. The maintainable approach for “play on PC in widescreen” remains **emulator configuration** (and/or targeting **Wii** builds in this repo if you are developing against that configuration).
+Enabling **`WIDESCREEN_SUPPORT`** for **GameCube** would be an **experimental, non-matching** change (it is not how retail GCN builds were compiled). That would require a deliberate fork and extensive testing, and is **out of scope** for upstream matching goals. For **play on PC**, many people use **Dolphin’s graphics settings**; a **native port** is a **different codebase and release** than this repository.
 
 ## 6. Summary
 
-- **PC + fullscreen + high resolution**: use **Dolphin** (or another emulator), not a “PC build” of this repo.
+- **`zeldaret/tp`**: builds **matching console** binaries; **does not** publish a PC executable from this repo.
+- **Native PC**: may be pursued by **other community projects** (recomp / ports); use their docs and builds.
+- **Emulation**: **Dolphin** remains the usual way to get HD resolution and widescreen options **without** a port project.
 - **In-source widescreen paths**: enabled for **Wii/Shield**-style framework flags in `configure.py`, not for standard **GCN** matching builds.
-- **True native PC port**: a different project (new renderer, host toolchain, assets pipeline).
 
 For building this decomp on Linux, see [ubuntu-native-build.md](ubuntu-native-build.md).
