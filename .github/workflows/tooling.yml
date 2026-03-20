@@ -29,3 +29,11 @@ jobs:
 
       - name: make help
         run: make help
+
+      - name: Minimal tp-port matDL stub script (no game assets)
+        run: |
+          set -e
+          rm -rf /tmp/tp-asset-ci
+          mkdir -p /tmp/tp-asset-ci
+          TP_PORT_DIR=/tmp/tp-asset-ci bash scripts/gen-tp-port-minimal-matdl-stub.sh
+          test -f /tmp/tp-asset-ci/assets/l_mat2DL__d_a_grass.h

@@ -36,6 +36,8 @@ bash scripts/apply-tp-port-patches.sh
 | `017` | **os_stubs.cpp** (apply **after `003`**): remove duplicate `GXNtsc480Int` / `C_MTX*` / `C_VEC*` definitions that clash with Aurora; stub missing GX entry points (`GXSetMisc`, `GXAbortFrame`, FIFO, XFB helpers, `GXPeekZ`, etc.). |
 | `018` | **game_stubs.cpp** (apply **after `004`**): `daAlink_c::checkAcceptWarp()` stub for the linker. |
 
+There is **no** `005`, `006`, or `016` file—numbers were skipped or folded into other patches. **`apply-tp-port-patches.sh`** applies every `contrib/patches/tp-port-*.patch` in **sorted order**; that order matches the dependencies called out above (e.g. **`003` before `017`**, **`004` before `018`**).
+
 ## Minimal asset header (no full decomp build)
 
 If you do not yet have `build/<VER>/include/assets/` from a decomp `ninja`, generate a **minimal** `assets/l_mat2DL__d_a_grass.h` so `m_Do_ext.cpp` compiles:

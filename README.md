@@ -26,7 +26,7 @@ The code for the GameCube releases is completely matching. However, not every Tr
 > [!IMPORTANT]
 > This repository does **not** contain any game assets or assembly whatsoever. An existing copy of the game is required.
 >
-> This project itself **is not**, and will not, produce a port, to PC or any other platform. It is a decompilation of the original game code, which can be compiled back into a binary identical to the original.
+> The **`configure.py` + `ninja`** workflow here targets **matching GameCube/Wii binaries**, not a desktop executable. **Optional** docs and scripts under [Native PC port (optional)](#native-pc-port-optional) describe separate **community** port checkouts (e.g. `mbayonal/tp-port`); those builds are **not** produced by this tree’s `ninja` target.
 
 <!-- markdownlint-disable MD033 -->
 [<img src="https://decomp.dev/zeldaret/tp.svg?w=512&h=256" width="512" height="256" alt="A visual">][Progress]

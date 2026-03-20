@@ -2,6 +2,15 @@
 
 These steps were validated on **Ubuntu 24.04**–style environments for **[mbayonal/tp-port](https://github.com/mbayonal/tp-port)** with **[encounter/aurora](https://github.com/encounter/aurora)** in `extern/aurora`. Your exact package names may differ slightly on Debian or other releases.
 
+**Quick reference**
+
+| Step | What |
+|------|------|
+| §1–3 | Clone port + Aurora, install **apt** deps, **CMake ≥ 3.30**, configure with **GCC** |
+| §4–5 | Apply **`contrib/patches`**, **`cmake --build`** |
+| §6–7 | Patches overview; **compile-time** headers via **`sync-tp-port-assets.sh`** or **`gen-tp-port-minimal-matdl-stub.sh`** |
+| §8 | **Runtime** game files on disk, Linux session — don’t block on Vulkan (section below) |
+
 ## 1. Clone the port and Aurora
 
 From the **zeldaret/tp** (decomp) repository root:
