@@ -86,9 +86,13 @@ When running under WSL, [objdiff](#diffing) is unable to get filesystem notifica
 
 ### Linux
 
-- Install [ninja](https://github.com/ninja-build/ninja/wiki/Pre-built-Ninja-packages).
+- Install [ninja](https://github.com/ninja-build/ninja/wiki/Pre-built-Ninja-packages) and Python 3 (e.g. on Ubuntu: `sudo apt-get install ninja-build python3`).
 
 [wibo](https://github.com/decompals/wibo), a minimal 32-bit Windows binary wrapper, will be automatically downloaded and used.
+
+For a step-by-step native Ubuntu setup (packages, `orig/` layout, and troubleshooting), see [docs/ubuntu-native-build.md](docs/ubuntu-native-build.md).
+
+Research notes on the **GX** graphics model and how it relates to a hypothetical **Vulkan**-style stack: [docs/vulkan-transition-audit.md](docs/vulkan-transition-audit.md).
 
 ## Building
 
