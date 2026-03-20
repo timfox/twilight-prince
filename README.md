@@ -51,6 +51,8 @@ More information about the project can be found here: <https://zsrtp.link>
 - [Progress](https://zsrtp.link/progress)
 - [Dependencies](#dependencies)
 - [Building](#building)
+- [Playing on a PC](#playing-on-a-pc)
+- [Native PC port (optional)](#native-pc-port-optional)
 - [Diffing](#diffing)
 - [Contributing](#contributing)
 - [FAQ](https://zsrtp.link/about)
@@ -90,7 +92,7 @@ When running under WSL, [objdiff](#diffing) is unable to get filesystem notifica
 
 [wibo](https://github.com/decompals/wibo), a minimal 32-bit Windows binary wrapper, will be automatically downloaded and used.
 
-For a step-by-step native Ubuntu setup (packages, `orig/` layout, and troubleshooting), see [docs/ubuntu-native-build.md](docs/ubuntu-native-build.md).
+For a step-by-step native Ubuntu setup (packages, `orig/` layout, and troubleshooting), see [docs/ubuntu-native-build.md](docs/ubuntu-native-build.md). Quick install of apt dependencies: `bash scripts/setup-ubuntu-native.sh`.
 
 Research notes on the **GX** graphics model and how it relates to a hypothetical **Vulkan**-style stack: [docs/vulkan-transition-audit.md](docs/vulkan-transition-audit.md).
 
@@ -118,6 +120,18 @@ Research notes on the **GX** graphics model and how it relates to a hypothetical
   ```sh
   ninja
   ```
+
+- Optional: verify tools and `orig/` layout with `bash scripts/check-env.sh` or `make check-env`, then `make configure` / `make build` (or `make rebuild` to run both). Pass extra configure flags with `make configure CONFIGURE_ARGS="--version GZ2P01"`.
+
+## Playing on a PC
+
+This repository **does not ship** a Windows/Linux/macOS game executable from this tree—it targets GameCube/Wii CPUs for **matching** builds. **Community native ports** (or similar recomp projects) may exist separately; they are **not** produced by `configure.py` + `ninja` here.
+
+For **most people**, playing on a PC at **high resolution** and **widescreen** means using a **native PC emulator** (typically [Dolphin](https://dolphin-emu.org/)) with graphics settings and optional codes. Details and nuance (including emulation vs port projects): [docs/pc-widescreen-and-resolution.md](docs/pc-widescreen-and-resolution.md).
+
+### Native PC port (optional)
+
+A separate **work-in-progress** community port (CMake, Aurora / GX bridge) lives at **[mbayonal/tp-port](https://github.com/mbayonal/tp-port)** and is **not** built by `ninja` in this repository. To clone it and vendor **[encounter/aurora](https://github.com/encounter/aurora)** next to its `extern/aurora` path, run `bash scripts/setup-native-port.sh` (or `make native-port-setup`). Optional **compatibility patches** for `tp-port` live in `contrib/patches/`; apply with `bash scripts/apply-tp-port-patches.sh`. Ubuntu/Debian build notes: [docs/native-port-ubuntu.md](docs/native-port-ubuntu.md). Overview: [docs/native-port-resources.md](docs/native-port-resources.md).
 
 ## Diffing
 

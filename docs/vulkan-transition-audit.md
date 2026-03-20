@@ -83,6 +83,37 @@ High-level correspondences (each GX feature often splits into **multiple** Vulka
 
 This codebase is a **faithful PowerPC/GX decompilation**, not a portable renderer. Moving from GX’s **TEV-centric fixed configuration** to **Vulkan** means building a **new rendering layer** that *implements* GX semantics (or a documented subset) on modern GPUs. The decompilation remains valuable as a **reference for behavior and data**, while the Vulkan effort would be a **long-running engine project** with distinct tooling, hosts, and goals.
 
+## Appendix: GX-heavy files (approximate signal)
+
+For prioritizing **read order** or a hypothetical HLE layer, it helps to see where **`GX…` identifiers** cluster. These counts are **not** semantic (they include macros, comments, and string fragments that match the pattern) and **do not** map 1:1 to draw calls.
+
+**Method:** `rg -c 'GX[A-Z][a-zA-Z0-9_]*' --glob '*.cpp' --glob '*.c'` on `src/` and `libs/JSystem/` (snapshot from this tree).
+
+| Count | Path |
+|------:|------|
+| 744 | `src/d/d_kankyo_rain.cpp` |
+| 483 | `src/d/d_drawlist.cpp` |
+| 449 | `src/m_Do/m_Do_graphic.cpp` |
+| 356 | `src/m_Do/m_Do_ext.cpp` |
+| 238 | `src/d/d_particle.cpp` |
+| 160 | `libs/JSystem/src/J3DGraphBase/J3DSys.cpp` |
+| 157 | `libs/JSystem/src/J3DGraphBase/J3DMatBlock.cpp` |
+| 150 | `libs/JSystem/src/J2DGraph/J2DMatBlock.cpp` |
+| 129 | `src/d/d_kankyo.cpp` |
+| 128 | `libs/JSystem/src/J2DGraph/J2DPicture.cpp` |
+| 116 | `libs/JSystem/src/JParticle/JPABaseShape.cpp` |
+| 111 | `src/d/actor/d_a_movie_player.cpp` |
+| 109 | `src/d/d_map_path.cpp` |
+| 105 | `libs/JSystem/src/J2DGraph/J2DWindow.cpp` |
+| 99 | `libs/JSystem/src/J2DGraph/J2DPictureEx.cpp` |
+| 92 | `libs/JSystem/src/JFramework/JFWDisplay.cpp` |
+| 90 | `libs/JSystem/src/J3DGraphBase/J3DGD.cpp` |
+| 84 | `src/d/d_map.cpp` |
+| 78 | `src/d/d_map_path_dmap.cpp` |
+| 75 | `src/d/d_ovlp_fade3.cpp` |
+
+**`libs/revolution/`** and other `libs/` trees also contain substantial GX usage (e.g. home-button UI); extend the same `rg` query there if you need a full inventory.
+
 ---
 
 *Document generated for research; align any port plans with [zeldaret](https://github.com/zeldaret/tp) project maintainers and their contribution guidelines.*

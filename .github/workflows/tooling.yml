@@ -1,0 +1,31 @@
+# Validates repo helper scripts and configure/Makefile entry points without game assets or PowerPC toolchains.
+
+name: Tooling
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install -y make ninja-build
+
+      - name: Shell syntax (scripts)
+        run: |
+          set -e
+          for f in scripts/*.sh; do
+            echo "bash -n $f"
+            bash -n "$f"
+          done
+
+      - name: configure.py --help
+        run: python3 configure.py --help >/dev/null
+
+      - name: make help
+        run: make help
