@@ -48,6 +48,14 @@ python3 configure.py
 ninja
 ```
 
+Optional wrappers (repo root):
+
+```sh
+make check-env
+make rebuild
+# or: make configure CONFIGURE_ARGS="--map --version GZ2E01" && make build
+```
+
 First run will:
 
 - Download **dtk**, **binutils**, **compilers**, and **wibo** (versions pinned in `configure.py`).

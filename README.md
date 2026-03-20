@@ -119,6 +119,8 @@ Research notes on the **GX** graphics model and how it relates to a hypothetical
   ninja
   ```
 
+- Optional: verify tools and `orig/` layout with `bash scripts/check-env.sh` or `make check-env`, then `make configure` / `make build` (or `make rebuild` to run both). Pass extra configure flags with `make configure CONFIGURE_ARGS="--version GZ2P01"`.
+
 ## Diffing
 
 Once the initial build succeeds, an `objdiff.json` should exist in the project root.
