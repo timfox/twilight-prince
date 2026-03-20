@@ -86,6 +86,16 @@ Then **re-run CMake** in `tp-port` if you already configured before the headers 
 
 Patch **`tp-port-014`** adds `${CMAKE_SOURCE_DIR}` to `tp_game_code`’s include path so `assets/*.h` resolves next to the port checkout.
 
+## 8. Native Linux + **runtime** assets (don’t block on Vulkan)
+
+Your goal should be: **correct game data on disk**, a **normal desktop session** (X11 or Wayland), and a **built `tp-game`**. You do **not** need to “finish Vulkan” first.
+
+- **Graphics stack:** `tp-port` uses **Aurora**, which uses **Dawn / WebGPU**. That may talk to Vulkan, D3D12, or Metal under the hood, or fall back to a **software (“Null”)** adapter in some environments. Treat that as an implementation detail: focus on **assets and paths**, not on hand-tuning `VK_*` settings for a first run.
+- **Runtime layout:** Follow **[mbayonal/tp-port](https://github.com/mbayonal/tp-port)**’s README for where **disc-extracted files** must live (commonly an `assets/` tree next to the build or cwd). Until the VFS finds that tree, you will see errors like **assets directory not found** or failed archive lookups—fix paths before chasing GPU APIs.
+- **Compile-time `.h` blobs** (§7) are separate from **runtime** archives and files: you still need the **generated headers** (or the minimal matDL stub) to **compile**, and the **full game dump** in the right place to **run** with real content.
+- **Wayland:** If the log mentions **`XDG_RUNTIME_DIR`**, ensure you are running under a normal graphical session (or set that variable appropriately); this is unrelated to Vulkan.
+- **Scope:** The port is **work-in-progress**. “Assets provided + Linux + binary runs” is achievable; **full** gameplay parity is still limited by upstream code, not only by your file copy.
+
 ---
 
 See also [native-port-resources.md](native-port-resources.md).
