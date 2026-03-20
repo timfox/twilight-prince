@@ -39,3 +39,6 @@ compile_commands.json
 
 # ISOs
 *.iso
+
+# Optional local clone of mbayonal/tp-port (scripts/setup-native-port.sh default)
+/tp-port/

@@ -31,6 +31,7 @@ bash scripts/apply-tp-port-patches.sh
 | `011` | **JUTException.cpp**: `std::isnan` / `std::isinf`. |
 | `012` | **d_camera.cpp**: `std::fabsf` → `fabsf` (many sites). |
 | `013` | **d_camera.cpp**: `isnan` → `std::isnan`. |
+| `014` | **CMakeLists.txt**: add `${CMAKE_SOURCE_DIR}` to `tp_game_code` includes so `#include "assets/..."` resolves to `tp-port/assets/` (populated by `scripts/sync-tp-port-assets.sh` after a decomp `ninja`). |
 
 ## Status
 

@@ -66,13 +66,25 @@ Successful configuration does **not** guarantee the tree builds: **`tp-port` and
 
 ## 6. Known upstream friction (check before reporting here)
 
-The patch series under **`contrib/patches/`** (applied by `scripts/apply-tp-port-patches.sh`, currently **`tp-port-001` … `tp-port-013`**) aligns **`aurora_ext.h`** and several **GCC/Clang portability** fixes (`os_stubs`, JGadget, JKernel, `d_camera.cpp`, etc.) with **current Aurora** and a typical Linux toolchain. See **`contrib/patches/README.md`** for the full list and status. Further errors may appear as more TUs compile—iterate in your **`tp-port`** checkout or push fixes upstream.
+The patch series under **`contrib/patches/`** (applied by `scripts/apply-tp-port-patches.sh`, currently **`tp-port-001` … `tp-port-014`**) aligns **`aurora_ext.h`**, **`CMakeLists.txt`** (include path for generated **`assets/*.h`** headers), and several **GCC/Clang portability** fixes (`os_stubs`, JGadget, JKernel, `d_camera.cpp`, etc.) with **current Aurora** and a typical Linux toolchain. See **`contrib/patches/README.md`** for the full list and status. Further errors may appear as more TUs compile—iterate in your **`tp-port`** checkout or push fixes upstream.
 
 The **decomp** repository (`zeldaret/tp`) does not control those files—only documents how to clone, patch, and build.
 
-## 7. Assets
+## 7. Assets (runtime files + **generated headers** for the build)
 
-Follow **`tp-port`’s README** for extracting your **legally obtained** game files into `assets/`. No copyrighted assets are stored in Git.
+1. **Runtime:** follow **`tp-port`’s README** for placing your **legally obtained** game data where the port expects it. No copyrighted assets are stored in Git.
+
+2. **Compile-time headers:** `tp-port` includes paths like `#include "assets/l_mat2DL__d_a_grass.h"`. Those `.h` files are **not** hand-written; the **decomp build** generates them under **`build/<VERSION>/include/assets/`** (from extracted REL/DOL data). After **`python3 configure.py`** and **`ninja`** succeed in **this** (`zeldaret/tp`) tree, copy them into the port:
+
+```sh
+# From zeldaret/tp repo root; default TP_VERSION is GZ2E01
+bash scripts/sync-tp-port-assets.sh
+# or: ZELDARET_TP_ROOT=/path/to/tp TP_PORT_DIR=/path/to/tp-port TP_VERSION=GZ2E01 bash scripts/sync-tp-port-assets.sh
+```
+
+Then **re-run CMake** in `tp-port` if you already configured before the headers existed.
+
+Patch **`tp-port-014`** adds `${CMAKE_SOURCE_DIR}` to `tp_game_code`’s include path so `assets/*.h` resolves next to the port checkout.
 
 ---
 
