@@ -119,4 +119,6 @@ Mount the directory that **contains** the version folder (e.g. if the full path 
 
 ---
 
+For **playing on a PC** at high resolution and widescreen (Dolphin, not a native binary from this repo), see [pc-widescreen-and-resolution.md](pc-widescreen-and-resolution.md).
+
 For project goals, progress, and contribution rules, see <https://zsrtp.link> and the main README.

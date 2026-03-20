@@ -51,6 +51,7 @@ More information about the project can be found here: <https://zsrtp.link>
 - [Progress](https://zsrtp.link/progress)
 - [Dependencies](#dependencies)
 - [Building](#building)
+- [Playing on a PC (emulation)](#playing-on-a-pc-emulation)
 - [Diffing](#diffing)
 - [Contributing](#contributing)
 - [FAQ](https://zsrtp.link/about)
@@ -120,6 +121,10 @@ Research notes on the **GX** graphics model and how it relates to a hypothetical
   ```
 
 - Optional: verify tools and `orig/` layout with `bash scripts/check-env.sh` or `make check-env`, then `make configure` / `make build` (or `make rebuild` to run both). Pass extra configure flags with `make configure CONFIGURE_ARGS="--version GZ2P01"`.
+
+## Playing on a PC (emulation)
+
+This project **does not** output a native Windows/Linux game binary; it targets GameCube/Wii CPUs. To play on a PC at **high resolution** and **widescreen**, use a **native PC emulator** (typically [Dolphin](https://dolphin-emu.org/)) with graphics settings and optional widescreen codes—see [docs/pc-widescreen-and-resolution.md](docs/pc-widescreen-and-resolution.md).
 
 ## Diffing
 
