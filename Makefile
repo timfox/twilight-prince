@@ -1,7 +1,7 @@
 # Convenience targets; ninja still performs the build.
 # Extra flags: make configure CONFIGURE_ARGS="--version GZ2P01 --map"
 
-.PHONY: help configure build rebuild check-env native-port-setup tp-port-ubuntu-deps apply-tp-port-patches sync-tp-port-assets
+.PHONY: help configure build rebuild check-env native-port-setup tp-port-ubuntu-deps apply-tp-port-patches sync-tp-port-assets gen-tp-port-minimal-matdl-stub
 
 CONFIGURE_ARGS ?=
 
@@ -15,6 +15,7 @@ help:
 	@echo "  make tp-port-ubuntu-deps apt packages for tp-port on Ubuntu (see docs/native-port-ubuntu.md)"
 	@echo "  make apply-tp-port-patches  apply contrib/patches to TP_PORT_DIR checkout"
 	@echo "  make sync-tp-port-assets  copy build/<VER>/include/assets -> tp-port/assets (after decomp ninja)"
+	@echo "  make gen-tp-port-minimal-matdl-stub  minimal assets/l_mat2DL__d_a_grass.h for tp-port (no full ninja)"
 
 configure:
 	python3 configure.py $(CONFIGURE_ARGS)
@@ -38,3 +39,6 @@ apply-tp-port-patches:
 
 sync-tp-port-assets:
 	@bash scripts/sync-tp-port-assets.sh
+
+gen-tp-port-minimal-matdl-stub:
+	@bash scripts/gen-tp-port-minimal-matdl-stub.sh

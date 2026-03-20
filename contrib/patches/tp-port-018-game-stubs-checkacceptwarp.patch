@@ -1,0 +1,9 @@
+--- a/src/game_stubs.cpp
++++ b/src/game_stubs.cpp
+@@ -301,6 +301,7 @@ cXyz* daAlink_c::checkBowCameraArrowPosP(s16*, s16*) { return nullptr; }
+ BOOL daAlink_c::checkCanoeRideTandem() { return FALSE; }
+ BOOL daAlink_c::checkCutLargeTurnState() const { return FALSE; }
++bool daAlink_c::checkAcceptWarp() { return false; }
+ bool daAlink_c::checkIronBallThrowMode() const { return false; }
+ bool daAlink_c::checkIronBallThrowReturnMode() const { return false; }
+ const cXyz* daAlink_c::checkMidnaLockJumpPoint() const { return nullptr; }

@@ -1,0 +1,297 @@
+--- a/src/os_stubs.cpp	2026-03-20 06:19:26.184328562 +0000
++++ b/src/os_stubs.cpp	2026-03-20 06:18:16.584474485 +0000
+@@ -306,17 +306,7 @@
+     return old;
+ }
+ 
+-// GX render modes - some are provided by Aurora's GXFrameBuffer.cpp
+-// Only provide the ones that aren't in Aurora
+-GXRenderModeObj GXNtsc480Int = {
+-    VI_TVMODE_NTSC_INT, 640, 480, 480, 40, 0, 640, 480,
+-    VI_XFBMODE_DF, GX_FALSE, GX_FALSE,
+-    {{6,6},{6,6},{6,6},{6,6},{6,6},{6,6},{6,6},{6,6},{6,6},{6,6},{6,6},{6,6}},
+-    {0, 0, 21, 22, 21, 0, 0}
+-};
+-
+-// GXNtsc480IntDf is provided by Aurora
+-// GXPal528IntDf is provided by Aurora
++// GX render modes: GXNtsc480Int / GXNtsc480IntDf / GXPal528IntDf / etc. are defined in Aurora (GXFrameBuffer.cpp)
+ 
+ GXRenderModeObj GXNtsc480Prog = {
+     VI_TVMODE_NTSC_PROG, 640, 480, 480, 40, 0, 640, 480,
+@@ -463,20 +453,44 @@
+ void GDSetArrayRaw(GXAttr attr, u32 addr, u8 stride) { (void)attr; (void)addr; (void)stride; }
+ void GDSetVtxDescv(GXVtxDescList* list) { (void)list; }
+ 
+-// Additional GX stubs
+-void GXEnableTexOffsets(GXTexCoordID coordId, GXBool lineOffset, GXBool pointOffset) {
+-    (void)coordId; (void)lineOffset; (void)pointOffset;
+-}
+-// GXInitTexCacheRegion is provided by Aurora
++// GXInitTexCacheRegion, GXEnableTexOffsets, GXSetClipMode, etc. are provided by Aurora
+ void GXReadXfRasMetric(u32* xfWait, u32* xfCount, u32* rastReject, u32* clipReject) {
+     if (xfWait) *xfWait = 0;
+     if (xfCount) *xfCount = 0;
+     if (rastReject) *rastReject = 0;
+     if (clipReject) *clipReject = 0;
+ }
+-void GXSetClipMode(GXClipMode mode) { (void)mode; }
+-void GXSetCoPlanar(GXBool coplanar) { (void)coplanar; }
+-void GXSetPointSize(u8 size, GXTexOffset offset) { (void)size; (void)offset; }
++// Aurora declares GXSetMisc in GXManage.h but does not implement it yet (GX.md)
++void GXSetMisc(GXMiscToken token, u32 val) { (void)token; (void)val; }
++// More GX entry points declared in Aurora headers but not yet implemented (see extern/aurora/GX.md)
++void GXAbortFrame(void) {}
++void* GXGetFifoBase(const GXFifoObj* fifo) {
++    (void)fifo;
++    return nullptr;
++}
++u32 GXGetFifoSize(const GXFifoObj* fifo) {
++    (void)fifo;
++    return 0;
++}
++f32 GXGetYScaleFactor(u16 efbHeight, u16 xfbHeight) {
++    (void)efbHeight;
++    (void)xfbHeight;
++    return 1.0f;
++}
++u16 GXGetNumXfbLines(u16 efbHeight, f32 yScale) {
++    (void)yScale;
++    return efbHeight;
++}
++void GXSetCopyClamp(GXFBClamp clamp) { (void)clamp; }
++OSThread* GXGetCurrentGXThread(void) { return nullptr; }
++OSThread* GXSetCurrentGXThread(void) { return nullptr; }
++void GXPeekZ(u16 x, u16 y, u32* z) {
++    (void)x;
++    (void)y;
++    if (z) {
++        *z = 0;
++    }
++}
+ 
+ // Cache stubs
+ void DCStoreRangeNoSync(void* addr, u32 size) { (void)addr; (void)size; }
+@@ -490,222 +504,3 @@
+ u8 g_printOtherHeapDebug = 0;
+ 
+ } // extern "C"
+-
+-// ============================================================
+-// Math functions not provided by Aurora
+-// ============================================================
+-#include <cmath>
+-#include <dolphin/mtx.h>
+-
+-extern "C" {
+-
+-// Matrix inverse (3x4)
+-u32 C_MTXInverse(const Mtx src, Mtx inv) {
+-    // Compute determinant of upper-left 3x3
+-    f32 det = src[0][0] * (src[1][1] * src[2][2] - src[1][2] * src[2][1])
+-            - src[0][1] * (src[1][0] * src[2][2] - src[1][2] * src[2][0])
+-            + src[0][2] * (src[1][0] * src[2][1] - src[1][1] * src[2][0]);
+-
+-    if (fabsf(det) < 1e-10f) return 0;  // Singular matrix
+-
+-    f32 invDet = 1.0f / det;
+-
+-    // Compute inverse of 3x3 rotation part
+-    inv[0][0] = (src[1][1] * src[2][2] - src[1][2] * src[2][1]) * invDet;
+-    inv[0][1] = (src[0][2] * src[2][1] - src[0][1] * src[2][2]) * invDet;
+-    inv[0][2] = (src[0][1] * src[1][2] - src[0][2] * src[1][1]) * invDet;
+-    inv[1][0] = (src[1][2] * src[2][0] - src[1][0] * src[2][2]) * invDet;
+-    inv[1][1] = (src[0][0] * src[2][2] - src[0][2] * src[2][0]) * invDet;
+-    inv[1][2] = (src[0][2] * src[1][0] - src[0][0] * src[1][2]) * invDet;
+-    inv[2][0] = (src[1][0] * src[2][1] - src[1][1] * src[2][0]) * invDet;
+-    inv[2][1] = (src[0][1] * src[2][0] - src[0][0] * src[2][1]) * invDet;
+-    inv[2][2] = (src[0][0] * src[1][1] - src[0][1] * src[1][0]) * invDet;
+-
+-    // Compute translation: -inv(R) * t
+-    inv[0][3] = -(inv[0][0] * src[0][3] + inv[0][1] * src[1][3] + inv[0][2] * src[2][3]);
+-    inv[1][3] = -(inv[1][0] * src[0][3] + inv[1][1] * src[1][3] + inv[1][2] * src[2][3]);
+-    inv[2][3] = -(inv[2][0] * src[0][3] + inv[2][1] * src[1][3] + inv[2][2] * src[2][3]);
+-
+-    return 1;
+-}
+-
+-// View matrix (LookAt)
+-void C_MTXLookAt(Mtx mtx, const Vec* camPos, const Vec* camUp, const Vec* target) {
+-    Vec look, right, up;
+-
+-    // look = normalize(target - camPos)
+-    look.x = target->x - camPos->x;
+-    look.y = target->y - camPos->y;
+-    look.z = target->z - camPos->z;
+-    f32 mag = sqrtf(look.x * look.x + look.y * look.y + look.z * look.z);
+-    if (mag > 0.0f) { look.x /= mag; look.y /= mag; look.z /= mag; }
+-
+-    // right = normalize(look × camUp)
+-    right.x = look.y * camUp->z - look.z * camUp->y;
+-    right.y = look.z * camUp->x - look.x * camUp->z;
+-    right.z = look.x * camUp->y - look.y * camUp->x;
+-    mag = sqrtf(right.x * right.x + right.y * right.y + right.z * right.z);
+-    if (mag > 0.0f) { right.x /= mag; right.y /= mag; right.z /= mag; }
+-
+-    // up = right × look
+-    up.x = right.y * look.z - right.z * look.y;
+-    up.y = right.z * look.x - right.x * look.z;
+-    up.z = right.x * look.y - right.y * look.x;
+-
+-    mtx[0][0] = right.x; mtx[0][1] = right.y; mtx[0][2] = right.z;
+-    mtx[1][0] = up.x;    mtx[1][1] = up.y;    mtx[1][2] = up.z;
+-    mtx[2][0] = -look.x; mtx[2][1] = -look.y; mtx[2][2] = -look.z;
+-    mtx[0][3] = -(camPos->x * right.x + camPos->y * right.y + camPos->z * right.z);
+-    mtx[1][3] = -(camPos->x * up.x + camPos->y * up.y + camPos->z * up.z);
+-    mtx[2][3] = camPos->x * look.x + camPos->y * look.y + camPos->z * look.z;
+-}
+-
+-// Perspective projection
+-void C_MTXPerspective(Mtx44 mtx, f32 fovy, f32 aspect, f32 near, f32 far) {
+-    f32 rad = fovy * 3.14159265358979f / 180.0f;
+-    f32 cot = 1.0f / tanf(rad * 0.5f);
+-
+-    mtx[0][0] = cot / aspect; mtx[0][1] = 0; mtx[0][2] = 0; mtx[0][3] = 0;
+-    mtx[1][0] = 0; mtx[1][1] = cot; mtx[1][2] = 0; mtx[1][3] = 0;
+-    mtx[2][0] = 0; mtx[2][1] = 0; mtx[2][2] = -far / (far - near); mtx[2][3] = -(far * near) / (far - near);
+-    mtx[3][0] = 0; mtx[3][1] = 0; mtx[3][2] = -1; mtx[3][3] = 0;
+-}
+-
+-// Light perspective (for shadow maps)
+-void C_MTXLightPerspective(Mtx mtx, f32 fovy, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT) {
+-    f32 rad = fovy * 3.14159265358979f / 180.0f;
+-    f32 cot = 1.0f / tanf(rad * 0.5f);
+-
+-    mtx[0][0] = cot / aspect * scaleS; mtx[0][1] = 0; mtx[0][2] = 0; mtx[0][3] = transS;
+-    mtx[1][0] = 0; mtx[1][1] = cot * scaleT; mtx[1][2] = 0; mtx[1][3] = transT;
+-    mtx[2][0] = 0; mtx[2][1] = 0; mtx[2][2] = -1; mtx[2][3] = 0;
+-}
+-
+-// Light orthographic
+-void C_MTXLightOrtho(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right, f32 scaleS, f32 scaleT, f32 transS, f32 transT) {
+-    mtx[0][0] = 2.0f / (right - left) * scaleS; mtx[0][1] = 0; mtx[0][2] = 0;
+-    mtx[0][3] = -((right + left) / (right - left)) * scaleS + transS;
+-    mtx[1][0] = 0; mtx[1][1] = 2.0f / (top - bottom) * scaleT; mtx[1][2] = 0;
+-    mtx[1][3] = -((top + bottom) / (top - bottom)) * scaleT + transT;
+-    mtx[2][0] = 0; mtx[2][1] = 0; mtx[2][2] = 0; mtx[2][3] = 1;
+-}
+-
+-// Quaternion to matrix
+-void C_MTXQuat(Mtx mtx, const Quaternion* q) {
+-    f32 xx = q->x * q->x; f32 yy = q->y * q->y; f32 zz = q->z * q->z;
+-    f32 xy = q->x * q->y; f32 xz = q->x * q->z; f32 yz = q->y * q->z;
+-    f32 wx = q->w * q->x; f32 wy = q->w * q->y; f32 wz = q->w * q->z;
+-
+-    mtx[0][0] = 1 - 2 * (yy + zz); mtx[0][1] = 2 * (xy - wz); mtx[0][2] = 2 * (xz + wy); mtx[0][3] = 0;
+-    mtx[1][0] = 2 * (xy + wz); mtx[1][1] = 1 - 2 * (xx + zz); mtx[1][2] = 2 * (yz - wx); mtx[1][3] = 0;
+-    mtx[2][0] = 2 * (xz - wy); mtx[2][1] = 2 * (yz + wx); mtx[2][2] = 1 - 2 * (xx + yy); mtx[2][3] = 0;
+-}
+-
+-// Rotation around axis
+-void C_MTXRotAxisRad(Mtx mtx, const Vec* axis, f32 rad) {
+-    f32 c = cosf(rad); f32 s = sinf(rad); f32 t = 1 - c;
+-    f32 x = axis->x, y = axis->y, z = axis->z;
+-    f32 mag = sqrtf(x*x + y*y + z*z);
+-    if (mag > 0.0f) { x /= mag; y /= mag; z /= mag; }
+-
+-    mtx[0][0] = t*x*x + c;   mtx[0][1] = t*x*y - s*z; mtx[0][2] = t*x*z + s*y; mtx[0][3] = 0;
+-    mtx[1][0] = t*x*y + s*z; mtx[1][1] = t*y*y + c;   mtx[1][2] = t*y*z - s*x; mtx[1][3] = 0;
+-    mtx[2][0] = t*x*z - s*y; mtx[2][1] = t*y*z + s*x; mtx[2][2] = t*z*z + c;   mtx[2][3] = 0;
+-}
+-
+-// Euler rotation (XYZ order)
+-void C_MTXRotRad(Mtx mtx, char axis, f32 rad) {
+-    f32 c = cosf(rad), s = sinf(rad);
+-    C_MTXIdentity(mtx);
+-    switch (axis) {
+-    case 'x': case 'X':
+-        mtx[1][1] = c; mtx[1][2] = -s;
+-        mtx[2][1] = s; mtx[2][2] = c;
+-        break;
+-    case 'y': case 'Y':
+-        mtx[0][0] = c;  mtx[0][2] = s;
+-        mtx[2][0] = -s; mtx[2][2] = c;
+-        break;
+-    case 'z': case 'Z':
+-        mtx[0][0] = c; mtx[0][1] = -s;
+-        mtx[1][0] = s; mtx[1][1] = c;
+-        break;
+-    }
+-}
+-
+-// Scale matrix
+-void C_MTXScale(Mtx mtx, f32 x, f32 y, f32 z) {
+-    C_MTXIdentity(mtx);
+-    mtx[0][0] = x; mtx[1][1] = y; mtx[2][2] = z;
+-}
+-
+-// Scale apply
+-void C_MTXScaleApply(const Mtx src, Mtx dst, f32 x, f32 y, f32 z) {
+-    dst[0][0] = src[0][0] * x; dst[0][1] = src[0][1] * x; dst[0][2] = src[0][2] * x; dst[0][3] = src[0][3] * x;
+-    dst[1][0] = src[1][0] * y; dst[1][1] = src[1][1] * y; dst[1][2] = src[1][2] * y; dst[1][3] = src[1][3] * y;
+-    dst[2][0] = src[2][0] * z; dst[2][1] = src[2][1] * z; dst[2][2] = src[2][2] * z; dst[2][3] = src[2][3] * z;
+-}
+-
+-// Trans apply
+-void C_MTXTransApply(const Mtx src, Mtx dst, f32 x, f32 y, f32 z) {
+-    if (src != dst) C_MTXCopy(src, dst);
+-    dst[0][3] += x; dst[1][3] += y; dst[2][3] += z;
+-}
+-
+-// Vector add
+-void C_VECAdd(const Vec* a, const Vec* b, Vec* ab) {
+-    ab->x = a->x + b->x; ab->y = a->y + b->y; ab->z = a->z + b->z;
+-}
+-
+-// Vector subtract
+-void C_VECSubtract(const Vec* a, const Vec* b, Vec* ab) {
+-    ab->x = a->x - b->x; ab->y = a->y - b->y; ab->z = a->z - b->z;
+-}
+-
+-// Vector scale
+-void C_VECScale(const Vec* src, Vec* dst, f32 scale) {
+-    dst->x = src->x * scale; dst->y = src->y * scale; dst->z = src->z * scale;
+-}
+-
+-// Vector normalize
+-void C_VECNormalize(const Vec* src, Vec* dst) {
+-    f32 mag = sqrtf(src->x * src->x + src->y * src->y + src->z * src->z);
+-    if (mag > 0.0f) { dst->x = src->x / mag; dst->y = src->y / mag; dst->z = src->z / mag; }
+-    else { dst->x = dst->y = dst->z = 0; }
+-}
+-
+-// Vector magnitude
+-f32 C_VECMag(const Vec* v) {
+-    return sqrtf(v->x * v->x + v->y * v->y + v->z * v->z);
+-}
+-
+-// Vector dot product
+-f32 C_VECDotProduct(const Vec* a, const Vec* b) {
+-    return a->x * b->x + a->y * b->y + a->z * b->z;
+-}
+-
+-// Vector cross product
+-void C_VECCrossProduct(const Vec* a, const Vec* b, Vec* ab) {
+-    Vec tmp;  // Handle aliasing
+-    tmp.x = a->y * b->z - a->z * b->y;
+-    tmp.y = a->z * b->x - a->x * b->z;
+-    tmp.z = a->x * b->y - a->y * b->x;
+-    *ab = tmp;
+-}
+-
+-// Vector distance
+-f32 C_VECDistance(const Vec* a, const Vec* b) {
+-    f32 dx = b->x - a->x, dy = b->y - a->y, dz = b->z - a->z;
+-    return sqrtf(dx*dx + dy*dy + dz*dz);
+-}
+-
+-// Vector half angle
+-void C_VECHalfAngle(const Vec* a, const Vec* b, Vec* half) {
+-    Vec na, nb;
+-    C_VECNormalize(a, &na);
+-    C_VECNormalize(b, &nb);
+-    half->x = na.x + nb.x; half->y = na.y + nb.y; half->z = na.z + nb.z;
+-    C_VECNormalize(half, half);
+-}
+-
+-} // extern "C"

@@ -48,7 +48,7 @@ Then follow the port’s **README** (CMake, assets under `assets/`, legal dump o
 
 Optional: apply **compatibility patches** maintained in this repo: `bash scripts/apply-tp-port-patches.sh` (see `contrib/patches/README.md`). These track **known** header clashes between `tp-port` and current Aurora; full alignment may still require upstream changes.
 
-After a successful **`ninja`** in this decomp (so `build/<VERSION>/include/assets/` exists), sync **generated asset headers** into the port: `bash scripts/sync-tp-port-assets.sh` (see [native-port-ubuntu.md](native-port-ubuntu.md) §7).
+After a successful **`ninja`** in this decomp (so `build/<VERSION>/include/assets/` exists), sync **generated asset headers** into the port: `bash scripts/sync-tp-port-assets.sh` (see [native-port-ubuntu.md](native-port-ubuntu.md) §7). Without a full decomp build, `bash scripts/gen-tp-port-minimal-matdl-stub.sh` can create a tiny placeholder `assets/l_mat2DL__d_a_grass.h` for compile-only checks (see `contrib/patches/README.md`).
 
 On **Ubuntu**, use [native-port-ubuntu.md](native-port-ubuntu.md) for a concrete package list (X11/Wayland/SDL build deps, **CMake ≥ 3.30** for Aurora, and `gcc`/`g++` flags). Quick apt helper: `bash scripts/setup-tp-port-ubuntu-deps.sh`.
 

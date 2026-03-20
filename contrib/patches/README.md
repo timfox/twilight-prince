@@ -32,9 +32,22 @@ bash scripts/apply-tp-port-patches.sh
 | `012` | **d_camera.cpp**: `std::fabsf` → `fabsf` (many sites). |
 | `013` | **d_camera.cpp**: `isnan` → `std::isnan`. |
 | `014` | **CMakeLists.txt**: add `${CMAKE_SOURCE_DIR}` to `tp_game_code` includes so `#include "assets/..."` resolves to `tp-port/assets/` (populated by `scripts/sync-tp-port-assets.sh` after a decomp `ninja`). |
+| `015` | **m_Do_printf.cpp**: `#include <cstdarg>` for `va_start` / `va_end` (GCC). |
+| `017` | **os_stubs.cpp** (apply **after `003`**): remove duplicate `GXNtsc480Int` / `C_MTX*` / `C_VEC*` definitions that clash with Aurora; stub missing GX entry points (`GXSetMisc`, `GXAbortFrame`, FIFO, XFB helpers, `GXPeekZ`, etc.). |
+| `018` | **game_stubs.cpp** (apply **after `004`**): `daAlink_c::checkAcceptWarp()` stub for the linker. |
+
+## Minimal asset header (no full decomp build)
+
+If you do not yet have `build/<VER>/include/assets/` from a decomp `ninja`, generate a **minimal** `assets/l_mat2DL__d_a_grass.h` so `m_Do_ext.cpp` compiles:
+
+```sh
+bash scripts/gen-tp-port-minimal-matdl-stub.sh
+```
+
+Replace with `scripts/sync-tp-port-assets.sh` when you have a full asset generation.
 
 ## Status
 
-These patches were developed against **current** `mbayonal/tp-port` **main** and **encounter/aurora** **main** on **GCC 13** / **g++**. The project is still **early**; after all patches, the build may progress into more game TUs and surface **additional** GCC/portability issues. Iterate in your `tp-port` clone or upstream fixes.
+These patches were developed against **current** `mbayonal/tp-port` **main** and **encounter/aurora** **main** on **GCC 13** / **g++**. With **`001`–`018`**, **`cmake --build`** can produce a linked **`tp-game`** on Linux (smoke-tested); runtime still needs legal game assets under the port’s VFS path. Further GCC/portability issues may appear as more TUs or upstream branches change—iterate in your `tp-port` clone or push fixes upstream.
 
 **Goal:** contribute the same changes back to **[tp-port](https://github.com/mbayonal/tp-port)** so this directory can shrink over time.

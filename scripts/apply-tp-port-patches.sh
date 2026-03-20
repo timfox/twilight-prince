@@ -10,6 +10,8 @@
 
 set -euo pipefail
 
+# GNU patch returns 1 when all hunks are skipped (-N, already applied); treat as OK.
+
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TP_PORT="${TP_PORT_DIR:-$ROOT/../tp-port}"
 if [[ "${TP_PORT}" != /* ]]; then
@@ -27,7 +29,13 @@ shopt -s nullglob
 for p in "$PATCH_DIR"/*.patch; do
   echo "Applying $(basename "$p") -> $TP_PORT"
   # -N: skip if already applied (GNU patch)
+  set +e
   patch -d "$TP_PORT" -p1 -N <"$p"
+  pe=$?
+  set -e
+  if [[ $pe -ne 0 && $pe -ne 1 ]]; then
+    exit "$pe"
+  fi
 done
 
 echo "OK: patches applied."

@@ -1,0 +1,10 @@
+--- a/src/m_Do/m_Do_printf.cpp
++++ b/src/m_Do/m_Do_printf.cpp
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include "m_Do/m_Do_printf.h"
++#include <cstdarg>
+ #include <cstdio>
+ #include <dolphin/base/PPCArch.h>
+ #include "m_Do/m_Do_ext.h"
