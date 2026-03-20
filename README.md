@@ -90,7 +90,7 @@ When running under WSL, [objdiff](#diffing) is unable to get filesystem notifica
 
 [wibo](https://github.com/decompals/wibo), a minimal 32-bit Windows binary wrapper, will be automatically downloaded and used.
 
-For a step-by-step native Ubuntu setup (packages, `orig/` layout, and troubleshooting), see [docs/ubuntu-native-build.md](docs/ubuntu-native-build.md).
+For a step-by-step native Ubuntu setup (packages, `orig/` layout, and troubleshooting), see [docs/ubuntu-native-build.md](docs/ubuntu-native-build.md). Quick install of apt dependencies: `bash scripts/setup-ubuntu-native.sh`.
 
 Research notes on the **GX** graphics model and how it relates to a hypothetical **Vulkan**-style stack: [docs/vulkan-transition-audit.md](docs/vulkan-transition-audit.md).
 

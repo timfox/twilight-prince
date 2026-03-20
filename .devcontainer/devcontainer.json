@@ -1,0 +1,13 @@
+{
+  "name": "TP decomp (zeldaret CI image)",
+  "image": "ghcr.io/zeldaret/tp-build:main",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python"]
+    }
+  },
+  "postCreateCommand": "git config --global --add safe.directory \"${containerWorkspaceFolder}\" 2>/dev/null || true; python3 --version; ninja --version",
+  "remoteEnv": {
+    "PYTHONUNBUFFERED": "1"
+  }
+}
