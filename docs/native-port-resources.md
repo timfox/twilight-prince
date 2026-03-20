@@ -46,7 +46,7 @@ Environment overrides:
 
 Then follow the port’s **README** (CMake, assets under `assets/`, legal dump of the game).
 
-On **Ubuntu**, you typically need a full C++ toolchain and CMake, e.g. `sudo apt install build-essential cmake ninja-build` (the port targets **C++20**; Clang is often recommended upstream—install `clang` if you use it as `CXX`).
+On **Ubuntu**, use [native-port-ubuntu.md](native-port-ubuntu.md) for a concrete package list (X11/Wayland/SDL build deps, **CMake ≥ 3.30** for Aurora, and `gcc`/`g++` flags). Quick apt helper: `bash scripts/setup-tp-port-ubuntu-deps.sh`.
 
 ## 4. Keeping this decomp and the port aligned
 

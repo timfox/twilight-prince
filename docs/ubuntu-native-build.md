@@ -119,6 +119,6 @@ Mount the directory that **contains** the version folder (e.g. if the full path 
 
 ---
 
-For **playing on a PC** at high resolution and widescreen (Dolphin, not a native binary from this repo), see [pc-widescreen-and-resolution.md](pc-widescreen-and-resolution.md). For an **experimental native port** checkout (CMake + Aurora; separate repo), see [native-port-resources.md](native-port-resources.md) and `bash scripts/setup-native-port.sh`.
+For **playing on a PC** at high resolution and widescreen (Dolphin, not a native binary from this repo), see [pc-widescreen-and-resolution.md](pc-widescreen-and-resolution.md). For an **experimental native port** checkout (CMake + Aurora; separate repo), see [native-port-resources.md](native-port-resources.md) and `bash scripts/setup-native-port.sh`. **Ubuntu**-specific `tp-port` dependencies: [native-port-ubuntu.md](native-port-ubuntu.md), `bash scripts/setup-tp-port-ubuntu-deps.sh`.
 
 For project goals, progress, and contribution rules, see <https://zsrtp.link> and the main README.
