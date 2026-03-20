@@ -1,0 +1,26 @@
+--- a/src/JSystem/JGadget/std-stream.cpp
++++ b/src/JSystem/JGadget/std-stream.cpp
+@@ -4,12 +4,13 @@
+ #include "JSystem/JGadget/define.h"
+ #include <cctype>
+ #include <float.h>
++#include <cmath>
+ 
+ namespace JGadget {
+ namespace {
+     namespace floatingpoint_ {
+         int classify(double x) {
+-            int fp = __fpclassifyd(x);
++            int fp = std::fpclassify(x);
+             switch (fp) {
+             case FP_ZERO:
+                 return 1;
+@@ -19,7 +20,7 @@
+                 return 3;
+             case FP_INFINITE:
+                 return 4;
+-            case FP_QNAN:
++            case FP_NAN:
+                 return 5;
+             }
+ 

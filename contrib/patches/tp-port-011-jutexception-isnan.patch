@@ -1,0 +1,14 @@
+--- a/src/JSystem/JUtility/JUTException.cpp
++++ b/src/JSystem/JUtility/JUTException.cpp
+@@ -205,9 +205,9 @@ void JUTException::setFPExceptionHandler(bool enable) {
+ #define __signbit(x) ((*(unsigned char*)&(x)) & 0x80)
+ 
+ void JUTException::showFloatSub(int index, f32 value) {
+-    if (isnan(value)) {
++    if (std::isnan(value)) {
+         sConsole->print_f("F%02d: Nan      ", index);
+-    } else if (isinf(value)) {
++    } else if (std::isinf(value)) {
+         if (__signbit(value)) {
+             sConsole->print_f("F%02d:+Inf     ", index);
+         } else {

@@ -66,7 +66,7 @@ Successful configuration does **not** guarantee the tree builds: **`tp-port` and
 
 ## 6. Known upstream friction (check before reporting here)
 
-Patch **`tp-port-001-aurora_ext-gxenum`** (applied by `scripts/apply-tp-port-patches.sh`) addresses the **first** duplicate `GXMiscToken` / `GXFBClamp` / FIFO getter conflicts. You may still see **additional** errors in `aurora_ext.h` vs newer Aurora headers (e.g. `GXVtxAttrFmtList`, `GXTlutSize`, fog helpers). Those are **port ↔ Aurora alignment** issues: fix in **tp-port** or **pin Aurora** to a matching revision; track upstream in **[mbayonal/tp-port](https://github.com/mbayonal/tp-port)**.
+The patch series under **`contrib/patches/`** (applied by `scripts/apply-tp-port-patches.sh`, currently **`tp-port-001` … `tp-port-013`**) aligns **`aurora_ext.h`** and several **GCC/Clang portability** fixes (`os_stubs`, JGadget, JKernel, `d_camera.cpp`, etc.) with **current Aurora** and a typical Linux toolchain. See **`contrib/patches/README.md`** for the full list and status. Further errors may appear as more TUs compile—iterate in your **`tp-port`** checkout or push fixes upstream.
 
 The **decomp** repository (`zeldaret/tp`) does not control those files—only documents how to clone, patch, and build.
 

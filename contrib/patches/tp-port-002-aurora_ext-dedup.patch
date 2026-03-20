@@ -1,0 +1,261 @@
+--- a/include/tp/aurora_ext.h
++++ b/include/tp/aurora_ext.h
+@@ -24,16 +24,6 @@
+ // MtxP is same as MtxPtr
+ typedef MtxPtr MtxP;
+ 
+-// GX types not in Aurora
+-typedef struct _GXVtxAttrFmtList {
+-    u32 attr;
+-    u32 cnt;
+-    u32 type;
+-    u8 frac;
+-} GXVtxAttrFmtList;
+-
+-typedef u32 GXTlutSize;
+-
+ // TP decompilation uses `typedef struct _GXColor GXColor;` forward declarations.
+ // Aurora defines these as typedefs directly without struct tags.
+ // We provide _GX* as typedefs so that existing forward declarations work.
+@@ -46,11 +36,12 @@
+ typedef GXTexRegion _GXTexRegion;
+ typedef GXTlutRegion _GXTlutRegion;
+ typedef GXRenderModeObj _GXRenderModeObj;
++typedef GXVtxAttrFmtList _GXVtxAttrFmtList;
++typedef GXFogAdjTable _GXFogAdjTable;
+ 
+ // GX Enum aliases
+ typedef GXAttr _GXAttr;
+ typedef GXTlutFmt _GXTlutFmt;
+-typedef GXTlutSize _GXTlutSize;
+ typedef GXTexFmt _GXTexFmt;
+ typedef GXCITexFmt _GXCITexFmt;
+ typedef GXTexWrapMode _GXTexWrapMode;
+@@ -96,77 +87,10 @@
+ typedef GXIndTexWrap _GXIndTexWrap;
+ typedef GXIndTexAlphaSel _GXIndTexAlphaSel;
+ typedef GXProjectionType _GXProjectionType;
++typedef GXTlutSize _GXTlutSize;
+ typedef GXTexCacheSize _GXTexCacheSize;
+ 
+-// GXTlutSize values
+-#define GX_TLUT_16    0
+-#define GX_TLUT_32    1
+-#define GX_TLUT_64    2
+-#define GX_TLUT_128   3
+-#define GX_TLUT_256   4
+-#define GX_TLUT_512   5
+-#define GX_TLUT_1K    6
+-#define GX_TLUT_2K    7
+-#define GX_TLUT_4K    8
+-#define GX_TLUT_8K    9
+-#define GX_TLUT_16K   10
+-
+-// GXFogAdjTable - Fog adjustment table (10 entries)
+-typedef struct _GXFogAdjTable {
+-    u16 r[10];  // Original decompilation uses 'r' member name
+-} GXFogAdjTable;
+-typedef GXFogAdjTable _GXFogAdjTable;
+-
+-// GX FIFO hardware write structure (stub for PC)
+-// On GCN this is a memory-mapped register at 0xCC008000
+-typedef struct _GXFifoWrite {
+-    u8 u8;
+-    u16 u16;
+-    u32 u32;
+-} GXFifoWrite;
+-
+-// GXWGFifo - Write Gather FIFO (stub - writes are no-ops on PC)
+-// The actual hardware writes are handled by Aurora's high-level API
+-extern GXFifoWrite GXWGFifo_stub;
+-#define GXWGFifo GXWGFifo_stub
+-
+-// GX FIFO command macros (stubs for PC)
+-#define GXCmd1u8(x) ((void)0)
+-#define GXCmd1u16(x) ((void)0)
+-#define GXCmd1u32(x) ((void)0)
+-#define GXCmd2u8(a, b) ((void)0)
+-
+-// GX Fifo position tracking (stub)
+-inline u32 GXGetFifoCount() { return 0; }
+-
+-// GXSetFogRangeAdj - not implemented in Aurora, stub it
+-// Fog range adjustment is a hardware-specific feature
+-inline void GXSetFogRangeAdj(GXBool enable, u16 center, const GXFogAdjTable* table) {
+-    (void)enable; (void)center; (void)table;
+-}
+-
+-// GXGetScissor - not implemented in Aurora, stub it
+-// Returns the current scissor box (we track a default 640x480)
+-inline void GXGetScissor(u32* x, u32* y, u32* width, u32* height) {
+-    *x = 0; *y = 0; *width = 640; *height = 480;
+-}
+-
+-// GXDrawCylinder - not implemented in Aurora, stub it
+-// Draws a cylinder with the given number of segments
+-inline void GXDrawCylinder(u8 segments) {
+-    (void)segments;
+-    // TODO: implement cylinder drawing
+-}
+-
+-// GX XFB functions (stubs for PC - not needed with modern rendering)
+-inline f32 GXGetYScaleFactor(u16 efbHeight, u16 xfbHeight) {
+-    if (efbHeight == 0) return 1.0f;
+-    return (f32)xfbHeight / (f32)efbHeight;
+-}
+-
+-inline u16 GXGetNumXfbLines(u16 efbHeight, f32 scaleFactor) {
+-    return (u16)(efbHeight * scaleFactor);
+-}
++// GXWGFifo / GXCmd*: Aurora TARGET_PC provides GXVert.h + implementations.
+ 
+ // VI functions/types not in Aurora - declared in os_stubs.cpp
+ typedef void (*VIRetraceCallback)(u32 retraceCount);
+@@ -232,12 +156,7 @@
+ // Override GXSetArray for 3-arg calls (TP uses 3-arg version)
+ #define GXSetArray(attr, data, stride) GXSetArray3(attr, data, stride)
+ 
+-// GX stubs for functions not implemented in Aurora
+-// Texture lookup table functions (used for paletted textures)
+-inline GXTlut GXGetTexObjTlut(const GXTexObj* obj) { (void)obj; return GX_TLUT0; }
+-
+-// Peek Z buffer (frame buffer reading) - stub returns 0
+-inline void GXPeekZ(u16 x, u16 y, u32* z) { (void)x; (void)y; *z = 0; }
++// GXGetTexObjTlut / GXPeekZ: declared in Aurora (GXGet.h / GXCpu2Efb.h).
+ 
+ // GXMiscToken is defined in Aurora's GXEnum.h. Retail SDK adds one more token.
+ #ifndef GX_MT_ABORT_WAIT_COPYOUT
+@@ -250,130 +169,20 @@
+ // On PC we always say it's available (progressive = 1)
+ inline u32 VIGetDTVStatus(void) { return 1; }
+ 
+-// GX thread management stubs
+-// On GC/Wii, GX commands can only be sent from one thread at a time
+-// On PC, this is not necessary
+-struct OSThread;  // Forward declaration
+-inline OSThread* GXGetCurrentGXThread(void) { return nullptr; }
+-inline OSThread* GXSetCurrentGXThread(void) { return nullptr; }
+-inline void GXAbortFrame(void) {}
+-
+-// GX viewport/projection stubs
+-// GXGetViewportv retrieves current viewport settings
+-inline void GXGetViewportv(f32* viewport) {
+-    // Default viewport: x, y, wd, ht, near, far
+-    viewport[0] = 0.0f;    // x
+-    viewport[1] = 0.0f;    // y
+-    viewport[2] = 640.0f;  // width
+-    viewport[3] = 480.0f;  // height
+-    viewport[4] = 0.0f;    // near
+-    viewport[5] = 1.0f;    // far
+-}
+-
+-// GXProject - projects 3D point to screen coordinates
+-inline void GXProject(f32 x, f32 y, f32 z, const f32 mtx[3][4], const f32* pm, const f32* vp,
+-                      f32* sx, f32* sy, f32* sz) {
+-    // Simplified projection (stub)
+-    (void)x; (void)y; (void)z; (void)mtx; (void)pm; (void)vp;
+-    *sx = 320.0f;  // Center of screen
+-    *sy = 240.0f;
+-    *sz = 0.5f;
+-}
++// GXGetCurrentGXThread / GXSetCurrentGXThread / GXAbortFrame / GXGetViewportv / GXProject: provided by Aurora headers.
+ 
+-// GXFBClamp is defined in Aurora's GXEnum.h.
+-
+-// GXSetCopyClamp - set Y clamp mode for EFB copy (stub)
+-inline void GXSetCopyClamp(GXFBClamp clamp) { (void)clamp; }
++// GXFBClamp, GXSetCopyClamp, GXCopyDisp, GXSetDispCopyDst: Aurora (GXFrameBuffer.h).
+ 
+ // GXGetFifoBase / GXGetFifoSize: declared in Aurora's GXFifo.h (do not redefine).
+ 
+-// GXCopyDisp - copy EFB to XFB (stub for PC - rendered differently)
+-inline void GXCopyDisp(void* dest, GXBool clear) { (void)dest; (void)clear; }
+-
+ // GXSetDispCopyFrame2Field - interlaced field selection (stub)
+ typedef enum { GX_COPY_PROGRESSIVE = 0, GX_COPY_INTLC_EVEN = 2, GX_COPY_INTLC_ODD = 3 } GXCopyMode;
+ inline void GXSetDispCopyFrame2Field(GXCopyMode mode) { (void)mode; }
+ 
+-// GXPixModeSync - wait for pixel pipeline (stub)
+-inline void GXPixModeSync(void) {}
+-
+-// GXSetDispCopyDst - set copy destination width (stub)
+-inline void GXSetDispCopyDst(u16 width, u16 height) { (void)width; (void)height; }
+-
+-// GXGetGPStatus - GPU status (stub)
+-inline void GXGetGPStatus(GXBool* overhi, GXBool* underlow, GXBool* readIdle, GXBool* cmdIdle, GXBool* brkpt) {
+-    if (overhi) *overhi = GX_FALSE;
+-    if (underlow) *underlow = GX_FALSE;
+-    if (readIdle) *readIdle = GX_TRUE;
+-    if (cmdIdle) *cmdIdle = GX_TRUE;
+-    if (brkpt) *brkpt = GX_FALSE;
+-}
++// GXPixModeSync / GXGetGPStatus / GXPixModeSync: Aurora (GXManage / GXFifo).
+ 
+ #endif  // TARGET_PC
+ 
+-// =====================================================
+-// PS* (PowerPC SIMD) to C_* (C implementation) aliases
+-// =====================================================
+-// On GameCube/Wii, PS* functions use Paired Singles hardware.
+-// On PC, we use the C implementations from Aurora.
+-
+-// Vector operations
+-#define PSVECAdd         C_VECAdd
+-#define PSVECSubtract    C_VECSubtract
+-#define PSVECScale       C_VECScale
+-#define PSVECNormalize   C_VECNormalize
+-#define PSVECMag         C_VECMag
+-#define PSVECDotProduct  C_VECDotProduct
+-#define PSVECCrossProduct C_VECCrossProduct
+-#define PSVECDistance    C_VECDistance
+-#define PSVECSquareDistance C_VECSquareDistance
+-
+-// Matrix operations
+-#define PSMTXIdentity    C_MTXIdentity
+-#define PSMTXCopy        C_MTXCopy
+-#define PSMTXConcat      C_MTXConcat
+-#define PSMTXInverse     C_MTXInverse
+-#define PSMTXInvXpose    C_MTXInvXpose
+-#define PSMTXTranspose   C_MTXTranspose
+-#define PSMTXRotRad      C_MTXRotRad
+-#define PSMTXRotTrig     C_MTXRotTrig
+-#define PSMTXRotAxisRad  C_MTXRotAxisRad
+-#define PSMTXTrans       C_MTXTrans
+-#define PSMTXTransApply  C_MTXTransApply
+-#define PSMTXScale       C_MTXScale
+-#define PSMTXScaleApply  C_MTXScaleApply
+-#define PSMTXQuat        C_MTXQuat
+-#define PSMTXMultVec     C_MTXMultVec
+-#define PSMTXMultVecSR   C_MTXMultVecSR
+-#define PSMTXMultVecArray C_MTXMultVecArray
+-#define PSMTXMultVecArraySR C_MTXMultVecArraySR
+-
+-// 4x4 Matrix operations
+-#define PSMTX44Identity  C_MTX44Identity
+-#define PSMTX44Copy      C_MTX44Copy
+-#define PSMTX44Concat    C_MTX44Concat
+-#define PSMTX44Inverse   C_MTX44Inverse
+-#define PSMTX44Transpose C_MTX44Transpose
+-#define PSMTX44Trans     C_MTX44Trans
+-#define PSMTX44Scale     C_MTX44Scale
+-#define PSMTX44MultVec   C_MTX44MultVec
+-
+-// Quaternion operations
+-#define PSQUATAdd        C_QUATAdd
+-#define PSQUATSubtract   C_QUATSubtract
+-#define PSQUATMultiply   C_QUATMultiply
+-#define PSQUATDivide     C_QUATDivide
+-#define PSQUATScale      C_QUATScale
+-#define PSQUATDotProduct C_QUATDotProduct
+-#define PSQUATNormalize  C_QUATNormalize
+-#define PSQUATInverse    C_QUATInverse
+-#define PSQUATExp        C_QUATExp
+-#define PSQUATLogN       C_QUATLogN
+-#define PSQUATSlerp      C_QUATSlerp
+-#define PSQUATSquad      C_QUATSquad
+-#define PSQUATMtx        C_QUATMtx
+-#define PSQUATRotAxisRad C_QUATRotAxisRad
+-
+ #ifdef __cplusplus
+ }
+ #endif

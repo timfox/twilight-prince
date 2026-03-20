@@ -1,0 +1,10 @@
+--- a/src/JSystem/JUtility/JUTDbPrint.cpp
++++ b/src/JSystem/JUtility/JUTDbPrint.cpp
+@@ -4,6 +4,7 @@
+ #include "JSystem/JKernel/JKRHeap.h"
+ #include "JSystem/JUtility/JUTVideo.h"
+ #include <cstdio>
++#include <cstdarg>
+ 
+ JUTDbPrint::JUTDbPrint(JUTFont* pFont, JKRHeap* pHeap) {
+     mFont = pFont;

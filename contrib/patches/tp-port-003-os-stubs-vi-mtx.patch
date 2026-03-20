@@ -1,0 +1,30 @@
+--- a/src/os_stubs.cpp	2026-03-20 05:39:24.802467802 +0000
++++ b/src/os_stubs.cpp	2026-03-20 05:41:54.633234675 +0000
+@@ -283,7 +283,7 @@
+ BOOL OSRestoreInterrupts(BOOL enable) { (void)enable; return FALSE; }
+ 
+ // VI function stubs (VIInit, VIFlush are provided by Aurora)
+-void VIConfigure(GXRenderModeObj* rmode) { (void)rmode; }
++void VIConfigure(const GXRenderModeObj* rmode) { (void)rmode; }
+ void VISetBlack(BOOL black) { (void)black; }
+ void VISetNextFrameBuffer(void* fb) { (void)fb; }
+ void VIWaitForRetrace(void) {}
+@@ -478,10 +478,6 @@
+ void GXSetCoPlanar(GXBool coplanar) { (void)coplanar; }
+ void GXSetPointSize(u8 size, GXTexOffset offset) { (void)size; (void)offset; }
+ 
+-// GXWGFifo stub
+-#include "tp/aurora_ext.h"
+-GXFifoWrite GXWGFifo_stub = {0, 0, 0};
+-
+ // Cache stubs
+ void DCStoreRangeNoSync(void* addr, u32 size) { (void)addr; (void)size; }
+ void DCZeroRange(void* addr, u32 size) { memset(addr, 0, size); }
+@@ -499,6 +495,7 @@
+ // Math functions not provided by Aurora
+ // ============================================================
+ #include <cmath>
++#include <dolphin/mtx.h>
+ 
+ extern "C" {
+ 

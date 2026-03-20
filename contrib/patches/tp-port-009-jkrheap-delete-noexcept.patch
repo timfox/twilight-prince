@@ -1,0 +1,38 @@
+--- a/src/JSystem/JKernel/JKRHeap.cpp
++++ b/src/JSystem/JKernel/JKRHeap.cpp
+@@ -518,7 +518,7 @@ void* operator new[](size_t size, JKRHeap* heap, int alignment) {
+     return JKRHeap::alloc(size, alignment, heap);
+ }
+ 
+-void operator delete(void* ptr) noexcept {
++void operator delete(void* ptr) {
+     // Check if this pointer belongs to JKRHeap
+     JKRHeap* heap = JKRHeap::findFromRoot(ptr);
+     if (heap != NULL) {
+@@ -529,7 +529,7 @@ void operator delete(void* ptr) noexcept {
+     }
+ }
+ 
+-void operator delete[](void* ptr) noexcept {
++void operator delete[](void* ptr) {
+     JKRHeap* heap = JKRHeap::findFromRoot(ptr);
+     if (heap != NULL) {
+         JKRHeap::free(ptr, NULL);
+@@ -538,7 +538,7 @@ void operator delete[](void* ptr) noexcept {
+     }
+ }
+ 
+-void operator delete(void* ptr, size_t) noexcept {
++void operator delete(void* ptr, size_t) {
+     JKRHeap* heap = JKRHeap::findFromRoot(ptr);
+     if (heap != NULL) {
+         JKRHeap::free(ptr, NULL);
+@@ -547,7 +547,7 @@ void operator delete(void* ptr, size_t) noexcept {
+     }
+ }
+ 
+-void operator delete[](void* ptr, size_t) noexcept {
++void operator delete[](void* ptr, size_t) {
+     JKRHeap* heap = JKRHeap::findFromRoot(ptr);
+     if (heap != NULL) {
+         JKRHeap::free(ptr, NULL);
