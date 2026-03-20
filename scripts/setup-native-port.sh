@@ -47,6 +47,7 @@ fi
 
 echo ""
 echo "Next (see tp-port README and docs/native-port-resources.md):"
+echo "  TP_PORT_DIR=\"$TP_PORT_DIR\" bash \"$ROOT/scripts/apply-tp-port-patches.sh\"   # optional"
 echo "  cd \"$TP_PORT_DIR\""
 echo "  cmake -B build -DCMAKE_BUILD_TYPE=Release"
 echo "  cmake --build build"

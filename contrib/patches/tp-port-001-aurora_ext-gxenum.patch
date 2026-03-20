@@ -1,0 +1,46 @@
+--- a/include/tp/aurora_ext.h
++++ b/include/tp/aurora_ext.h
+@@ -239,16 +239,11 @@
+ // Peek Z buffer (frame buffer reading) - stub returns 0
+ inline void GXPeekZ(u16 x, u16 y, u32* z) { (void)x; (void)y; *z = 0; }
+ 
+-// GX misc tokens (used by GXSetMisc)
+-typedef enum {
+-    GX_MT_NULL = 0,
+-    GX_MT_XF_FLUSH = 1,
+-    GX_MT_DL_SAVE_CONTEXT = 2,
+-    GX_MT_ABORT_WAIT_COPYOUT = 3,
+-} GXMiscToken;
+-
+-// GXSetMisc stub
+-inline void GXSetMisc(GXMiscToken token, u32 val) { (void)token; (void)val; }
++// GXMiscToken is defined in Aurora's GXEnum.h. Retail SDK adds one more token.
++#ifndef GX_MT_ABORT_WAIT_COPYOUT
++#define GX_MT_ABORT_WAIT_COPYOUT ((GXMiscToken)3)
++#endif
++// GXSetMisc: provided by Aurora (GXManage.h); do not stub here.
+ 
+ // VI (Video Interface) stubs
+ // VIGetDTVStatus returns whether progressive scan is available
+@@ -285,19 +280,12 @@
+     *sz = 0.5f;
+ }
+ 
+-// GXFBClamp - framebuffer clamp modes (for Y deflicker)
+-typedef enum {
+-    GX_CLAMP_NONE = 0,
+-    GX_CLAMP_TOP = 1,
+-    GX_CLAMP_BOTTOM = 2,
+-} GXFBClamp;
++// GXFBClamp is defined in Aurora's GXEnum.h.
+ 
+ // GXSetCopyClamp - set Y clamp mode for EFB copy (stub)
+ inline void GXSetCopyClamp(GXFBClamp clamp) { (void)clamp; }
+ 
+-// GX FIFO additional functions (GXFifoObj is provided by Aurora)
+-inline void* GXGetFifoBase(GXFifoObj* fifo) { (void)fifo; return NULL; }
+-inline u32 GXGetFifoSize(GXFifoObj* fifo) { (void)fifo; return 0; }
++// GXGetFifoBase / GXGetFifoSize: declared in Aurora's GXFifo.h (do not redefine).
+ 
+ // GXCopyDisp - copy EFB to XFB (stub for PC - rendered differently)
+ inline void GXCopyDisp(void* dest, GXBool clear) { (void)dest; (void)clear; }

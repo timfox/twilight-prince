@@ -131,7 +131,7 @@ For **most people**, playing on a PC at **high resolution** and **widescreen** m
 
 ### Native PC port (optional)
 
-A separate **work-in-progress** community port (CMake, Aurora / GX bridge) lives at **[mbayonal/tp-port](https://github.com/mbayonal/tp-port)** and is **not** built by `ninja` in this repository. To clone it and vendor **[encounter/aurora](https://github.com/encounter/aurora)** next to its `extern/aurora` path, run `bash scripts/setup-native-port.sh` (or `make native-port-setup`). Ubuntu/Debian build notes (CMake version, X11 deps, GCC): [docs/native-port-ubuntu.md](docs/native-port-ubuntu.md). Overview: [docs/native-port-resources.md](docs/native-port-resources.md).
+A separate **work-in-progress** community port (CMake, Aurora / GX bridge) lives at **[mbayonal/tp-port](https://github.com/mbayonal/tp-port)** and is **not** built by `ninja` in this repository. To clone it and vendor **[encounter/aurora](https://github.com/encounter/aurora)** next to its `extern/aurora` path, run `bash scripts/setup-native-port.sh` (or `make native-port-setup`). Optional **compatibility patches** for `tp-port` live in `contrib/patches/`; apply with `bash scripts/apply-tp-port-patches.sh`. Ubuntu/Debian build notes: [docs/native-port-ubuntu.md](docs/native-port-ubuntu.md). Overview: [docs/native-port-resources.md](docs/native-port-resources.md).
 
 ## Diffing
 

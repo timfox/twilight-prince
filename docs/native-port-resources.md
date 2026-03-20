@@ -46,6 +46,8 @@ Environment overrides:
 
 Then follow the port’s **README** (CMake, assets under `assets/`, legal dump of the game).
 
+Optional: apply **compatibility patches** maintained in this repo: `bash scripts/apply-tp-port-patches.sh` (see `contrib/patches/README.md`). These track **known** header clashes between `tp-port` and current Aurora; full alignment may still require upstream changes.
+
 On **Ubuntu**, use [native-port-ubuntu.md](native-port-ubuntu.md) for a concrete package list (X11/Wayland/SDL build deps, **CMake ≥ 3.30** for Aurora, and `gcc`/`g++` flags). Quick apt helper: `bash scripts/setup-tp-port-ubuntu-deps.sh`.
 
 ## 4. Keeping this decomp and the port aligned

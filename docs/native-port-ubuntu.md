@@ -48,7 +48,15 @@ cmake -B build -S . -G Ninja -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
 ```
 
-## 4. Build
+## 4. Apply compatibility patches (from this repo)
+
+This decomp fork may ship **small patches** for `tp-port` under `contrib/patches/` (see `contrib/patches/README.md`). After cloning `tp-port` + Aurora:
+
+```sh
+bash scripts/apply-tp-port-patches.sh
+```
+
+## 5. Build
 
 ```sh
 cmake --build build --parallel "$(nproc)"
@@ -56,13 +64,13 @@ cmake --build build --parallel "$(nproc)"
 
 Successful configuration does **not** guarantee the tree builds: **`tp-port` and `Aurora` move independently** and may temporarily break each other on `main`.
 
-## 5. Known upstream friction (check before reporting here)
+## 6. Known upstream friction (check before reporting here)
 
-As of recent `main` snapshots, the build can fail with **duplicate GX enum / stub declarations** between `tp-port`’s `include/tp/aurora_ext.h` and Aurora’s `include/dolphin/gx/GXEnum.h` (and related headers). That is a **port ↔ Aurora alignment** issue to fix in **those** repositories (pin a known-good Aurora commit, or update `aurora_ext.h`).
+Patch **`tp-port-001-aurora_ext-gxenum`** (applied by `scripts/apply-tp-port-patches.sh`) addresses the **first** duplicate `GXMiscToken` / `GXFBClamp` / FIFO getter conflicts. You may still see **additional** errors in `aurora_ext.h` vs newer Aurora headers (e.g. `GXVtxAttrFmtList`, `GXTlutSize`, fog helpers). Those are **port ↔ Aurora alignment** issues: fix in **tp-port** or **pin Aurora** to a matching revision; track upstream in **[mbayonal/tp-port](https://github.com/mbayonal/tp-port)**.
 
-The **decomp** repository (`zeldaret/tp`) does not control those files—only documents how to clone and build.
+The **decomp** repository (`zeldaret/tp`) does not control those files—only documents how to clone, patch, and build.
 
-## 6. Assets
+## 7. Assets
 
 Follow **`tp-port`’s README** for extracting your **legally obtained** game files into `assets/`. No copyrighted assets are stored in Git.
 
